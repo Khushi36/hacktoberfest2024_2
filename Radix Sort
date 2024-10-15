@@ -1,0 +1,50 @@
+def counting_sort(arr, exp):  
+    n = len(arr)  
+    output = [0] * n  # Output array  
+    count = [0] * 10  # Initialize count array for digits (0-9)  
+
+    # Store counts of occurrences of digits in the current digit position  
+    for i in range(n):  
+        index = (arr[i] // exp) % 10  # Get the digit at the current position  
+        count[index] += 1  
+
+    # Change count[i] so that it contains the actual position of this digit in output[]  
+    for i in range(1, 10):  
+        count[i] += count[i - 1]  
+
+    # Build the output array  
+    i = n - 1  # Start from the end of arr  
+    while i >= 0:  
+        index = (arr[i] // exp) % 10  
+        output[count[index] - 1] = arr[i]  
+        count[index] -= 1  
+        i -= 1  
+
+    # Copy the output array to arr[], so that arr[] now contains sorted numbers  
+    for i in range(n):  
+        arr[i] = output[i]  
+
+def radix_sort(arr):  
+    # Find the maximum number to determine the number of digits  
+    max_num = max(arr)  
+
+    # Do counting sort for every digit (exp is 10^i where i is the digit index)  
+    exp = 1  
+    while max_num // exp > 0:  
+        counting_sort(arr, exp)  
+        exp *= 10  # Move to the next digit  
+
+# Function to get user input  
+def get_user_input():  
+    # Prompt user for input  
+    user_input = input("Enter a list of non-negative integers separated by spaces: ")  
+    # Convert input into a list of integers  
+    arr = list(map(int, user_input.split()))  
+    return arr  
+
+# Main function to run the Radix Sort  
+if __name__ == "__main__":  
+    arr = get_user_input()  
+    print("Original array:", arr)  
+    radix_sort(arr)  
+    print("Sorted array:", arr)
